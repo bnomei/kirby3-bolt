@@ -30,7 +30,7 @@ How much is gained depends on how many have been skipped. You can in average exp
 
 > ⚠️ Do **not** use Bolt to find pages you can expect Kirby to have already indexed.
 
-> 🐌 Do **not** use Bolt to find the majority of pages within the same directory.
+> 🐌 Do **not** use Bolt to find the majority of pages within the same directory. Bolt is great for fetching a few pages from **different** folders. If you need a few from same **directory** then `page()` will be faster.
 
 ## Usage
 ```php
