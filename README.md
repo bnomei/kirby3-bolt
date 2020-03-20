@@ -28,7 +28,9 @@ Because it does not scan each directory and file but skips as many of them as po
 
 How much is gained depends on how many have been skipped. You can in average expect it to be n-times faster by the average folder count in your content tree. Example: 1000 pages in 10 folders 3 levels deep: 10\*10\*10. If you need a page from the third level Kirby would have to create a page index of 1000 pages but Bolt will create only 3.
 
-> ⚠️ Do not use Bolt to find pages you can expect Kirby to have already indexed.
+> ⚠️ Do **not** use Bolt to find pages you can expect Kirby to have already indexed.
+
+> 🐌 Do **not** use Bolt to find the majority of pages within the same directory.
 
 ## Usage
 ```php
