@@ -22,6 +22,10 @@ This plugin is free but if you use it in a commercial project please consider to
 - `git submodule add https://github.com/bnomei/kirby3-bolt.git site/plugins/kirby3-bolt` or
 - `composer require bnomei/kirby3-bolt`
 
+## Works great with
+
+- [kirby-resolve](https://github.com/lukaskleinschmidt/kirby-resolve) by Lukas Kleinschmidt
+
 ## Why is Bolt faster and how much?
 
 Because it does not scan each directory and file but skips as many of them as possible. Once you use the Page-Object in your code Kirby will lazily load uninitalized properties.
@@ -56,4 +60,4 @@ It is discouraged to use this plugin in any project that promotes racism, sexism
 ## Credits
 
 based on idea in
-- https://github.com/lukaskleinschmidt/kirby-resolve
+- [kirby-resolve](https://github.com/lukaskleinschmidt/kirby-resolve)

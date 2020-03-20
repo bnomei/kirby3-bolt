@@ -60,6 +60,7 @@
     "kirby-cms-path": "tests/kirby"
   },
   "suggest": {
-    "bnomei/kirby3-autoid": "AutoID has build in support for Bolt which makes it incredibly fast."
+    "bnomei/kirby3-autoid": "AutoID has build in support for Bolt which makes it incredibly fast.",
+    "lukaskleinschmidt/kirby-resolve": "In using the same idea but applied routes using paths (not ids) and thus even faster."
   }
 }
