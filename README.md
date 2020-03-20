@@ -39,7 +39,7 @@ How much is gained depends on how many have been skipped. You can in average exp
 ## Usage
 ```php
 // lets assume 1000 pages: 10*10*10
-$id = 'this-page-has/10_siblings/in-every-subfolder';
+$id = 'this-page-has/ten-siblings/in-every-subfolder';
 $page = page($id); // kirby core
 $page = bolt($id); // ~10x faster lookup
 
