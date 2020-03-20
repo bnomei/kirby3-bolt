@@ -6,6 +6,7 @@ namespace Bnomei;
 
 use Kirby\Cms\Dir;
 use Kirby\Cms\Page;
+use Kirby\Toolkit\A;
 
 final class Bolt
 {
@@ -28,6 +29,11 @@ final class Bolt
      */
     private $parent;
 
+    /**
+     * @var array<string,Page>
+     */
+    private static $idToPage;
+
     public function __construct(?Page $parent = null)
     {
         $kirby = kirby();
@@ -48,11 +54,28 @@ final class Bolt
         }, array_keys(Page::$models));
     }
 
+    public function lookup(string $id): ?Page
+    {
+        if (!static::$idToPage) {
+            static::$idToPage = [];
+        }
+        return A::get(static::$idToPage, $id);
+    }
+
+    public function pushLookup(string $id, Page $page): void
+    {
+        static::$idToPage[$id] = $page;
+    }
+
     public function findByID(string $id): ?Page
     {
+        $page = $this->lookup($id);
+        if ($page) {
+            return $page;
+        }
         $draft = false;
+        $treeid = null;
         $parent = $this->parent;
-        $page = null;
         $parts = explode('/', $id);
 
         foreach ($parts as $part) {
@@ -61,6 +84,14 @@ final class Bolt
                 $this->root .= '/_drafts';
                 continue;
             }
+            $treeid = $treeid ? $treeid . '/' . $part : $part;
+            $page = $this->lookup($treeid);
+            if ($page) {
+                $parent = $page;
+                $this->root = $page->root(); // loop
+                continue;
+            }
+
             $params = [
                 'root' => null,
                 'parent' => $parent,
@@ -70,7 +101,7 @@ final class Bolt
             ];
             $directory = opendir($this->root);
             while ($file = readdir($directory)) {
-                if ($file === '.' || $file === '..') {
+                if (strpos($file, '.') !== false ) {
                     continue;
                 }
                 if ($file === $part) {
@@ -104,13 +135,17 @@ final class Bolt
                 // Only direct subpages are marked as drafts
                 $draft = false;
             }
-            $page = Page::factory($params);
+            $page = null; //kirby()->extension('pages', $this->root);
+            if (! $page) {
+                $page = Page::factory($params);
+                $this->pushLookup($treeid, $page);
+                kirby()->extend([
+                    'pages' => [$this->root => $page,]
+                ]);
+            }
             $parent = $page;
             $this->root = $params['root']; // loop
         }
-        kirby()->extend([
-            'pages' => [$this->root => $page,]
-        ]);
         return $page;
     }
 

@@ -22,7 +22,7 @@ class BoltTest extends TestCase
     {
         $this->depth = 2;
 
-        if (site()->pages()->index()->notTemplate('home')->count() === 0) {
+        if (site()->pages()->children()->notTemplate('home')->count() === 0) {
             for ($i = 0; $i < $this->depth; $i++) {
                 $this->createPage(site(), $i, $this->depth);
             }
@@ -76,6 +76,7 @@ class BoltTest extends TestCase
     public function testFind()
     {
         $randomPage = $this->randomPage();
+        site()->prune();
 
         $page = \bolt($randomPage->id());
 
@@ -95,6 +96,27 @@ class BoltTest extends TestCase
         }
     }
 
+    public function testShortcutRepeatedLookup()
+    {
+        $randomPage = $this->randomPage();
+        site()->prune();
+
+        $page = \bolt($randomPage->id());
+        $page2 = \bolt($randomPage->id());
+        $this->assertEquals($page, $page2);
+    }
+
+    public function testShortcutSilblingsLookup()
+    {
+        $randomPage = $this->randomPage();
+        $randomSibl = $randomPage->siblings()->shuffle()->first();
+        site()->prune();
+
+        $page = \bolt($randomPage->id());
+        $page2 = \bolt($randomSibl->id());
+        $this->assertEquals($page->parent()->id(), $page2->parent()->id());
+    }
+
     public function testPageMethod()
     {
         $randomPage = null;
@@ -103,6 +125,7 @@ class BoltTest extends TestCase
             $randomPage = $this->randomPage();
             $parent = $randomPage->parent();
         }
+        site()->prune();
 
         $page = $parent->bolt($randomPage->slug());
 
