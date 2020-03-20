@@ -6,7 +6,7 @@ Kirby::plugin('bnomei/bolt', [
     'options' => [],
     'pageMethods' => [
         'bolt' => function (string $id) {
-            return \Bnomei\Bolt::page($id, $this->root());
+            return \Bnomei\Bolt::page($id, $this);
         },
     ],
 ]);

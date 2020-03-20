@@ -20,7 +20,7 @@ class BoltTest extends TestCase
 
     public function setUpPages(): void
     {
-        $this->depth = 5;
+        $this->depth = 2;
 
         if (site()->pages()->index()->notTemplate('home')->count() === 0) {
             for ($i = 0; $i < $this->depth; $i++) {
@@ -77,14 +77,35 @@ class BoltTest extends TestCase
     {
         $randomPage = $this->randomPage();
 
-        var_dump($randomPage->diruri());
         $page = \bolt($randomPage->id());
 
         // bolt page is lazy loaded
         $this->assertNotEquals($randomPage, $page);
 
+        // test kirbys lazy loading
         $this->assertEquals($randomPage->id(), $page->id());
         $this->assertEquals($randomPage->num(), $page->num());
         $this->assertEquals($randomPage->url(), $page->url());
+        $this->assertEquals($randomPage->title()->value(), $page->title()->value());
+        $this->assertEquals($randomPage->diruri(), $page->diruri());
+        if ($randomPage->parent()) {
+            $this->assertEquals($randomPage->parent()->root(), $page->parent()->root());
+            $this->assertEquals($randomPage->siblings()->count(), $page->siblings()->count());
+            $this->assertEquals($randomPage->siblings()->first()->id(), $page->siblings()->first()->id());
+        }
+    }
+
+    public function testPageMethod()
+    {
+        $randomPage = null;
+        $parent = null;
+        while (!$parent) {
+            $randomPage = $this->randomPage();
+            $parent = $randomPage->parent();
+        }
+
+        $page = $parent->bolt($randomPage->slug());
+
+        $this->assertEquals($randomPage->id(), $page->id());
     }
 }

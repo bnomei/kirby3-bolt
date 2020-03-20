@@ -1,7 +1,7 @@
 {
   "name": "bnomei/kirby3-bolt",
   "type": "kirby-plugin",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Kirby 3 Plugin for a fast Page lookup even in big content trees",
   "license": "MIT",
   "authors": [
@@ -58,5 +58,8 @@
   },
   "extra": {
     "kirby-cms-path": "tests/kirby"
+  },
+  "suggest": {
+    "bnomei/kirby3-autoid": "AutoID has build in support for Bolt which makes it incredibly fast."
   }
 }

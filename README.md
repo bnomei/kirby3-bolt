@@ -4,7 +4,7 @@
 ![Stars](https://flat.badgen.net/packagist/ghs/bnomei/kirby3-bolt?color=272822)
 [![Build Status](https://flat.badgen.net/travis/bnomei/kirby3-bolt)](https://travis-ci.com/bnomei/kirby3-bolt)
 [![Coverage Status](https://flat.badgen.net/coveralls/c/github/bnomei/kirby3-bolt)](https://coveralls.io/github/bnomei/kirby3-bolt) 
-[![Maintainability](https://flat.badgen.net/codeclimate/maintainability/bnomei/kirby3-bolt)](https://codeclimate.com/github/bnomei/kirby3-bolt)  
+[![Maintainability](https://flat.badgen.net/codeclimate/maintainability/bnomei/kirby3-bolt)](https://codeclimate.com/github/bnomei/kirby3-bolt)
 [![Twitter](https://flat.badgen.net/badge/twitter/bnomei?color=66d9ef)](https://twitter.com/bnomei)
 
 Kirby 3 Plugin for a fast Page lookup even in big content trees
@@ -24,13 +24,18 @@ This plugin is free but if you use it in a commercial project please consider to
 
 ## Why is Bolt faster and how much?
 
-Because it does not scan each directory and file but skips as many of them as possible. How much is gained depends on how many have been skipped.
+Because it does not scan each directory and file but skips as many of them as possible. Once you use the Page-Object in your code Kirby will lazily load uninitalized properties.
+
+How much is gained depends on how many have been skipped. You can in average expect it to be n-times faster by the average folder count in your content tree. Example: 1000 pages in 10 folders 3 levels deep: 10*10*10. If you need a page from the third level Kirby would have to create a page index of 1000 pages but Bolt will create only 3.
+
+> ⚠️ Do not use Bolt to find pages you can expect Kirby to have already indexed.
 
 ## Usage
 ```php
-$id = 'this-page-has/1000_siblings/in-every-subfolder';
+// lets assume 1000 pages: 10*10*10
+$id = 'this-page-has/10_siblings/in-every-subfolder';
 $page = page($id); // kirby core
-$page = bolt($id); // faster lookup
+$page = bolt($id); // ~10x faster lookup
 
 // can lookup beginning at a certain page as well
 $page = $somePage->bolt($idInTree);

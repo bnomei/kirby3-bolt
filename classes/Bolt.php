@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Bnomei;
 
-use Kirby\Cms\Page;
 use Kirby\Cms\Dir;
+use Kirby\Cms\Page;
 
 final class Bolt
 {
@@ -23,11 +23,19 @@ final class Bolt
      * @var array<string>
      */
     private $modelFiles;
+    /**
+     * @var Page|null
+     */
+    private $parent;
 
-    public function __construct(?string $root = null)
+    public function __construct(?Page $parent = null)
     {
         $kirby = kirby();
-        $this->root = $root ?? $kirby->root('content');
+        $this->root = $kirby->root('content');
+        if ($parent) {
+            $this->parent = $parent;
+            $this->root = $parent->root();
+        }
 
         $this->extension = $kirby->contentExtension();
         if ($kirby->multilang()) {
@@ -43,7 +51,7 @@ final class Bolt
     public function findByID(string $id): ?Page
     {
         $draft = false;
-        $parent = null;
+        $parent = $this->parent;
         $page = null;
         $parts = explode('/', $id);
 
@@ -62,14 +70,14 @@ final class Bolt
             ];
             $directory = opendir($this->root);
             while ($file = readdir($directory)) {
-                if ($file === "." || $file === "..") {
+                if ($file === '.' || $file === '..') {
                     continue;
                 }
                 if ($file === $part) {
                     $params['root'] = $this->root . '/' . $file;
                 } elseif (strpos($file, Dir::$numSeparator . $part) !== false) {
                     $params['root'] = $this->root . '/' . $file;
-                    if (preg_match('/^([0-9]+)_(.*)$/', $part, $match)) {
+                    if (preg_match('/^([0-9]+)'.Dir::$numSeparator.'(.*)$/', $file, $match)) {
                         $params['num'] = intval($match[1]);
                         $params['slug'] = $match[2];
                     }
@@ -77,7 +85,9 @@ final class Bolt
                 if ($params['root']) {
                     foreach ($this->modelFiles as $modelFile) {
                         if (file_exists($params['root'] . '/' . $modelFile)) {
-                            $params['model'] = str_replace('.' . $this->extension, '', $modelFile);
+                            $template = str_replace('.' . $this->extension, '', $modelFile);
+                            $params['template'] = $template;
+                            $params['model'] = $template;
                             break;
                         }
                     }
@@ -86,7 +96,7 @@ final class Bolt
             }
             closedir($directory);
 
-            if (!$params['root']) {
+            if (! $params['root']) {
                 return null; // not found
             }
             if ($draft === true) {
@@ -96,16 +106,16 @@ final class Bolt
             }
             $page = Page::factory($params);
             $parent = $page;
-            kirby()->extend([
-                'pages' => [$id => $page]
-            ]);
             $this->root = $params['root']; // loop
         }
+        kirby()->extend([
+            'pages' => [$this->root => $page,]
+        ]);
         return $page;
     }
 
-    public static function page(string $id, ?string $root = null): ?\Kirby\Cms\Page
+    public static function page(string $id, ?Page $parent = null): ?Page
     {
-        return (new self($root))->findByID($id);
+        return (new self($parent))->findByID($id);
     }
 }
