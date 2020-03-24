@@ -1,7 +1,6 @@
 # Kirby 3 Bolt
 
 ![Release](https://flat.badgen.net/packagist/v/bnomei/kirby3-bolt?color=ae81ff)
-![Stars](https://flat.badgen.net/packagist/ghs/bnomei/kirby3-bolt?color=272822)
 [![Build Status](https://flat.badgen.net/travis/bnomei/kirby3-bolt)](https://travis-ci.com/bnomei/kirby3-bolt)
 [![Coverage Status](https://flat.badgen.net/coveralls/c/github/bnomei/kirby3-bolt)](https://coveralls.io/github/bnomei/kirby3-bolt) 
 [![Maintainability](https://flat.badgen.net/codeclimate/maintainability/bnomei/kirby3-bolt)](https://codeclimate.com/github/bnomei/kirby3-bolt)
