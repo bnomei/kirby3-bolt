@@ -104,9 +104,10 @@ final class Bolt
                 if (strpos($file, '.') !== false ) {
                     continue;
                 }
+                $_part = Dir::$numSeparator . $part;
                 if ($file === $part) {
                     $params['root'] = $this->root . '/' . $file;
-                } elseif (strpos($file, Dir::$numSeparator . $part) !== false) {
+                } elseif (substr($file, -strlen($_part)) === $_part) {
                     $params['root'] = $this->root . '/' . $file;
                     if (preg_match('/^([0-9]+)'.Dir::$numSeparator.'(.*)$/', $file, $match)) {
                         $params['num'] = intval($match[1]);
