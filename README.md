@@ -23,6 +23,7 @@ This plugin is free but if you use it in a commercial project please consider to
 
 ## Works great with
 
+- [kirby3-autoid](https://github.com/bnomei/kirby3-autoid)
 - [kirby-resolve](https://github.com/lukaskleinschmidt/kirby-resolve) by Lukas Kleinschmidt
 
 ## Why is Bolt faster and how much?
