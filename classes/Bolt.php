@@ -41,7 +41,6 @@ final class Bolt
         if ($parent) {
             $this->parent = $parent;
             $this->root = $parent->root();
-            $this->diruri = $parent->diruri();
         }
 
         $this->extension = $kirby->contentExtension();
