@@ -11,7 +11,7 @@ Kirby 3 Plugin for a fast Page lookup even in big content trees
 ## Commercial Usage
 
 This plugin is free but if you use it in a commercial project please consider to
-- [make a donation 🍻](https://www.paypal.me/bnomei/2) or
+- [make a donation 🍻](https://www.paypal.me/bnomei/5) or
 - [buy me ☕](https://buymeacoff.ee/bnomei) or
 - [buy a Kirby license using this affiliate link](https://a.paddle.com/v2/click/1129/35731?link=1170)
 
@@ -20,10 +20,6 @@ This plugin is free but if you use it in a commercial project please consider to
 - unzip [master.zip](https://github.com/bnomei/kirby3-bolt/archive/master.zip) as folder `site/plugins/kirby3-bolt` or
 - `git submodule add https://github.com/bnomei/kirby3-bolt.git site/plugins/kirby3-bolt` or
 - `composer require bnomei/kirby3-bolt`
-
-## Works great with
-
-- [kirby-resolve](https://github.com/lukaskleinschmidt/kirby-resolve) by Lukas Kleinschmidt
 
 ## Why is Bolt faster and how much?
 
@@ -40,7 +36,18 @@ $page = bolt($id); // ~10x faster lookup
 
 // can lookup beginning at a certain page as well
 $page = $somePage->bolt($idInTree);
+
+// it's even faster when you look up based on a directory name
+$page = bolt('1_this-page-has/5_ten-siblings/3_in-every-subfolder');
 ```
+
+## Works great with
+
+- [kirby3-autoid](https://github.com/bnomei/kirby3-autoid) where it speeds up the page lookup
+
+## Related Plugins
+
+- [kirby-resolve](https://github.com/lukaskleinschmidt/kirby-resolve) by Lukas Kleinschmidt
 
 ## Disclaimer
 

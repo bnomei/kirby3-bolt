@@ -41,6 +41,7 @@ final class Bolt
         if ($parent) {
             $this->parent = $parent;
             $this->root = $parent->root();
+            $this->diruri = $parent->diruri();
         }
 
         $this->extension = $kirby->contentExtension();
@@ -84,7 +85,8 @@ final class Bolt
                 $this->root .= '/_drafts';
                 continue;
             }
-            $treeid = $treeid ? $treeid . '/' . $part : $part;
+            $partWithoutNum = array_reverse(explode(Dir::$numSeparator, $part))[0];
+            $treeid = $treeid ? $treeid . '/' . $partWithoutNum : $partWithoutNum;
             $page = $this->lookup($treeid);
             if ($page) {
                 $parent = $page;
@@ -94,39 +96,59 @@ final class Bolt
 
             $params = [
                 'root' => null,
+                'dirname' => null,
                 'parent' => $parent,
-                'slug' => $part,
+                'slug' => $partWithoutNum,
                 'num' => null,
                 'model' => null,
             ];
-            $directory = opendir($this->root);
-            while ($file = readdir($directory)) {
-                if (strpos($file, '.') !== false ) {
-                    continue;
-                }
-                $_part = Dir::$numSeparator . $part;
-                if ($file === $part) {
-                    $params['root'] = $this->root . '/' . $file;
-                } elseif (substr($file, -strlen($_part)) === $_part) {
-                    $params['root'] = $this->root . '/' . $file;
-                    if (preg_match('/^([0-9]+)'.Dir::$numSeparator.'(.*)$/', $file, $match)) {
-                        $params['num'] = intval($match[1]);
-                        $params['slug'] = $match[2];
+
+            // if dir exists
+            if (is_dir($this->root . '/' . $part)) {
+                $params['root'] = $this->root . '/' . $part;
+                $params['dirname'] = $part;
+                foreach ($this->modelFiles as $modelFile) {
+                    if (file_exists($params['root'] . '/' . $modelFile)) {
+                        $template = str_replace('.' . $this->extension, '', $modelFile);
+                        $params['template'] = $template;
+                        $params['model'] = $template;
+                        break;
                     }
                 }
-                if ($params['root']) {
-                    foreach ($this->modelFiles as $modelFile) {
-                        if (file_exists($params['root'] . '/' . $modelFile)) {
-                            $template = str_replace('.' . $this->extension, '', $modelFile);
-                            $params['template'] = $template;
-                            $params['model'] = $template;
-                            break;
+
+            } else { // search for dir
+                $directory = opendir($this->root);
+                while ($file = readdir($directory)) {
+                    if (strpos($file, '.') !== false) {
+                        continue;
+                    }
+                    $_part = Dir::$numSeparator . $part;
+//                    if ($file === $part) {
+//                        $params['root'] = $this->root . '/' . $file;
+//                        $params['diruri'] = $this->diruri . '/' . $part;
+//                    } else
+                    if (substr($file, -strlen($_part)) === $_part) {
+                        $params['root'] = $this->root . '/' . $file;
+                        $params['diruri'] = $file;
+                        if (preg_match('/^([0-9]+)' . Dir::$numSeparator . '(.*)$/', $file, $match)) {
+                            $params['num'] = intval($match[1]);
+                            $params['slug'] = $match[2];
                         }
                     }
-                    break;
+                    if ($params['root']) {
+                        foreach ($this->modelFiles as $modelFile) {
+                            if (file_exists($params['root'] . '/' . $modelFile)) {
+                                $template = str_replace('.' . $this->extension, '', $modelFile);
+                                $params['template'] = $template;
+                                $params['model'] = $template;
+                                break;
+                            }
+                        }
+                        break;
+                    }
                 }
+                closedir($directory);
             }
-            closedir($directory);
 
             if (! $params['root']) {
                 return null; // not found

@@ -131,4 +131,16 @@ class BoltTest extends TestCase
 
         $this->assertEquals($randomPage->id(), $page->id());
     }
+
+    public function testFindByDiruri()
+    {
+        $randomPage = $this->randomPage();
+        $randomPageDiruri = $randomPage->diruri();
+        site()->prune();
+
+        $page = \bolt($randomPageDiruri);
+
+        $this->assertEquals($randomPageDiruri, $page->diruri());
+        $this->assertEquals($randomPage->id(), $page->id());
+    }
 }
