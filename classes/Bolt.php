@@ -114,7 +114,6 @@ final class Bolt
                         break;
                     }
                 }
-
             } else { // search for dir
                 $directory = opendir($this->root);
                 while ($file = readdir($directory)) {
