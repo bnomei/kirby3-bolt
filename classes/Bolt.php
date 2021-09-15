@@ -84,7 +84,9 @@ final class Bolt
                 $this->root .= '/_drafts';
                 continue;
             }
-            $partWithoutNum = array_reverse(explode(Dir::$numSeparator, $part))[0];
+            $numSplit = array_reverse(explode(Dir::$numSeparator, $part));
+            $partWithoutNum = $numSplit[0];
+            $num = count($numSplit) > 1 ? $numSplit[1] : null;
             $treeid = $treeid ? $treeid . '/' . $partWithoutNum : $partWithoutNum;
             $page = $this->lookup($treeid);
             if ($page) {
@@ -98,7 +100,7 @@ final class Bolt
                 'dirname' => null,
                 'parent' => $parent,
                 'slug' => $partWithoutNum,
-                'num' => null,
+                'num' => $num,
                 'model' => null,
             ];
 
