@@ -37,6 +37,7 @@
     "test": [
       "mkdir -p tests/logs",
       "@putenv XDEBUG_MODE=coverage",
+      "phpunit --configuration ./phpunit.xml --group CreatePagesForNextRun",
       "phpunit --configuration ./phpunit.xml"
     ],
     "dist": [
