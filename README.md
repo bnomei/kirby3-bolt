@@ -8,7 +8,7 @@
 
 Kirby 3 Plugin for a fast Page lookup even in big content trees
 
-## Commerical Usage
+## Commercial Usage
 
 > <br>
 ><b>Support open source!</b><br><br>
