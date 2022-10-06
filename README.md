@@ -1,3 +1,7 @@
+> <br>
+> Mainly intended to be used with now deprecated AutoID plugin. Use my Boost plugin instead since that inherited lots of Bolts logic.<br>
+> &nbsp; 
+
 # Kirby 3 Bolt
 
 ![Release](https://flat.badgen.net/packagist/v/bnomei/kirby3-bolt?color=ae81ff)
